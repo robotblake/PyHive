@@ -190,6 +190,11 @@ class Cursor(common.DBAPICursor):
         self._process_response(response)
         return response.json()
 
+    def close(self):
+        """Close the current running query"""
+        if self._nextUri is not None:
+            requests.delete(self._nextUri)
+
     def _fetch_more(self):
         """Fetch the next URI and update state"""
         self._process_response(requests.get(self._nextUri))
