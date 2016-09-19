@@ -78,6 +78,12 @@ class TestPresto(unittest.TestCase, DBAPITestCase):
         # catch unicode/str
         self.assertEqual(list(map(type, rows[0])), list(map(type, expected[0])))
 
+    @with_cursor
+    def test_cursor_close(self, cursor):
+        cursor.execute('SELECT * FROM one_row_complex')
+        cursor.close()
+        self.assertRaises(presto.DatabaseError, cursor.fetchall)
+
     def test_noops(self):
         """The DB-API specification requires that certain actions exist, even though they might not
         be applicable."""
